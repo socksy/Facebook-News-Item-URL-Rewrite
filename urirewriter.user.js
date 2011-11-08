@@ -13,7 +13,7 @@
 // @include https://facebook.tld/*
 // ==/UserScript==
 
-var appname_reg = /data-appname="[^"]+"/;
+var appname_reg = /data-appname="[^"]+"/g;
 var tracking_shit = /onmousedown="[^>]+/;
 var guardian_fbcrap = /(fb_source=[^"]+)/;
 var yahoo_app_real_uri = /redirect_url=(.+)%3Ffb_source/;
@@ -28,7 +28,7 @@ for (i=0; i<newsitems.length; i++) {
 		
 	} else if (/Yahoo!/.test(newsitems[i].innerHTML)) {
 		url = newsitems[i].innerHTML.match(yahoo_app_real_uri);
-		newsitems[i].innerHTML = newsitems[i].innerHTML.replace(/href="(?:[^"]+)/, "href=\""+url);
+		newsitems[i].innerHTML = newsitems[i].innerHTML.replace(/href="(?:[^"]+)/, "href=\""+decodeURI(url));
 	} else {
 		//Need to include more rewrite rules.
 	}
