@@ -13,18 +13,21 @@
 // @include https://facebook.tld/*
 // ==/UserScript==
 
+var tracking_shit = /onmousedown="[^>]+/;
 var guardian_fbcrap = /(fb_source=[^"]+)/;
-var yahoo_app_real_uri = /redirect_url=(.+)%3Ffb_source/
+var yahoo_app_real_uri = /redirect_url=(.+)%3Ffb_source/;
 // Haven't worked out washington post's scheme yet
 
-var newsitems = document.getElementsByClassName("newsReadNormalItemContent");
+var newsitems = document.getElementsByClassName('newsReadsNormalItemContent');
 
 for (item in newsitems) {
+	item.innerHTML = item.innerHTML.replace(tracking_shit, "");
 	if (/The Guardian/.test(item.innerHTML) {
-		item.write(item.replace(guardian_fbcrap, "");
+		item.innerHTML = item.innerHTML.replace(guardian_fbcrap, "");
+		
 	} else if (/Yahoo!/.test(item.innerHTML) {
-		url = item.match(yahoo_app_real_uri);
-		item.write(item.replace(/href="(?:[^"]+), "href=\""+url);
+		url = item.innerHTML.match(yahoo_app_real_uri);
+		item.innerHTML = item.innerHTML.replace(/href="(?:[^"]+)/, "href=\""+url);
 	} else {
 		//Need to include more rewrite rules.
 	}
