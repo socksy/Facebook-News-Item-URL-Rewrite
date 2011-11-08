@@ -1,6 +1,6 @@
 // 
 // ==UserScript==
-// @name Facebook NewsItem URL Rewriter
+// @name Facebook News Items URL Rewriter
 // @description Rewrites news item URLs so they don't force you to sign up to an app just to read the damn article
 // @version 0.1
 // @include http://*.facebook.com/*
@@ -13,6 +13,7 @@
 // @include https://facebook.tld/*
 // ==/UserScript==
 
+var appname_reg = /data-appname="[^"]+"/;
 var tracking_shit = /onmousedown="[^>]+/;
 var guardian_fbcrap = /(fb_source=[^"]+)/;
 var yahoo_app_real_uri = /redirect_url=(.+)%3Ffb_source/;
@@ -20,15 +21,16 @@ var yahoo_app_real_uri = /redirect_url=(.+)%3Ffb_source/;
 
 var newsitems = document.getElementsByClassName('newsReadsNormalItemContent');
 
-for (item in newsitems) {
-	item.innerHTML = item.innerHTML.replace(tracking_shit, "");
-	if (/The Guardian/.test(item.innerHTML) {
-		item.innerHTML = item.innerHTML.replace(guardian_fbcrap, "");
+for (i=0; i<newsitems.length; i++) {
+	newsitems[i].innerHTML = newsitems[i].innerHTML.replace(tracking_shit, "");
+	if (/The Guardian/.test(newsitems[i].innerHTML)) {
+		newsitems[i].innerHTML = newsitems[i].innerHTML.replace(guardian_fbcrap, "");
 		
-	} else if (/Yahoo!/.test(item.innerHTML) {
-		url = item.innerHTML.match(yahoo_app_real_uri);
-		item.innerHTML = item.innerHTML.replace(/href="(?:[^"]+)/, "href=\""+url);
+	} else if (/Yahoo!/.test(newsitems[i].innerHTML)) {
+		url = newsitems[i].innerHTML.match(yahoo_app_real_uri);
+		newsitems[i].innerHTML = newsitems[i].innerHTML.replace(/href="(?:[^"]+)/, "href=\""+url);
 	} else {
 		//Need to include more rewrite rules.
 	}
+	newsitems[i].innerHTML = newsitems[i].innerHTML.replace(appname_reg, "");
 }
